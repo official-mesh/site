@@ -1,0 +1,19 @@
+---
+import BareLayout from "@layouts/BareLayout.astro";
+import Wordmark from "@components/Wordmark.astro";
+import { HOME, SITE } from "@consts";
+---
+
+<BareLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
+  <div class="px-6 text-center">
+    <div class="animate">
+      <Wordmark size="lg" />
+    </div>
+    <p class="animate eyebrow mt-10">coming soon</p>
+    <p class="animate mt-16 text-xs text-muted/70 font-mono">
+      <a class="linky" href={`https://github.com/${SITE.GH_ORG}`} rel="noopener">
+        github.com/{SITE.GH_ORG}
+      </a>
+    </p>
+  </div>
+</BareLayout>

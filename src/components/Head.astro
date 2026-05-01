@@ -1,0 +1,82 @@
+---
+import "../styles/global.css";
+import { SITE } from "@consts";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+}
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const { title, description, image = "/og.png" } = Astro.props;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+<meta name="theme-color" content="#0f0f10" />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<!-- Commit Mono via Fontshare CDN — the only font on this site. -->
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://api.fontshare.com/v2/css?f[]=commit-mono@400,700,400i&display=swap"
+/>
+
+<link rel="canonical" href={canonicalURL} />
+
+<title>{title}</title>
+<meta name="title" content={title} />
+<meta name="description" content={description} />
+
+<meta property="og:type" content="website" />
+<meta property="og:url" content={Astro.url} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={new URL(image, Astro.url)} />
+
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={Astro.url} />
+<meta property="twitter:title" content={title} />
+<meta property="twitter:description" content={description} />
+<meta property="twitter:image" content={new URL(image, Astro.url)} />
+
+<script is:inline>
+  function animate() {
+    document.querySelectorAll(".animate").forEach((el, i) => {
+      setTimeout(() => el.classList.add("show"), i * 80);
+    });
+  }
+  document.addEventListener("DOMContentLoaded", animate);
+</script>
+
+{SITE.GOATCOUNTER && (
+  <>
+    <script
+      is:inline
+      data-goatcounter={`https://${SITE.GOATCOUNTER}.goatcounter.com/count`}
+      async
+      src="//gc.zgo.at/count.js"
+    />
+    <!-- Outbound link click tracking — pings GoatCounter as a custom event when a visitor follows a link off-site (e.g. a GitHub repo). -->
+    <script is:inline>
+      window.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll('a[href^="http"]').forEach((a) => {
+          if (a.host === window.location.host) return;
+          a.addEventListener("click", () => {
+            if (window.goatcounter) {
+              window.goatcounter.count({
+                path: "outbound: " + a.href,
+                title: a.textContent?.trim() || a.href,
+                event: true,
+              });
+            }
+          });
+        });
+      });
+    </script>
+  </>
+)}
