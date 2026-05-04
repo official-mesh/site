@@ -1,0 +1,20 @@
+---
+name: Meshbot Remote
+tagline: A Meshbot peer for Android, with an optional radio in the loop.
+order: 3
+languages: ["Kotlin"]
+platforms: ["Android"]
+repo: https://github.com/official-mesh/remote
+install: ./gradlew assembleDebug && adb install -r app/build/outputs/apk/debug/app-debug.apk
+highlights:
+  - Talk to your mesh agent from your phone — fire hooks, send commands, watch the console live.
+  - A tabbed UI — Connect, Hooks, Console — with a slash-command picker that auto-completes against the host's live `/help` listing.
+  - Optional USB-OTG or BLE GATT radio bridge from the phone back to the Meshbot host, multiplexed onto the same TCP link as the control plane.
+---
+
+An Android app that connects out to a running Meshbot. The operator can fire
+hooks, send slash commands or freeform text into the host's console, watch the
+console output stream live, and optionally bridge a USB or BLE radio back to
+the host. The wire protocol is a thin frame on top of Meshtastic's `ToRadio` /
+`FromRadio` protobuf with separate control and data planes; reconnects with
+exponential backoff; degrades cleanly when the host is offline.

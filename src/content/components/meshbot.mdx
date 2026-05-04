@@ -1,0 +1,24 @@
+---
+name: Meshbot
+tagline: An LLM-aware operator console for LoRa mesh networks.
+order: 1
+languages: ["Python"]
+platforms: ["Linux", "macOS", "Docker"]
+repo: https://github.com/official-mesh/meshbot
+install: pip install -r requirements.txt && python meshbot.py
+highlights:
+  - Multi-backend LLM inference with cascading fallback — local mlx-lm or llama.cpp first, OpenAI-compatible or the Anthropic API when the question warrants it.
+  - A searchable forensics database of every frame on the air, with MQTT bridged in and out; meshmonitor and SDR as additional inputs. New PSKs decrypt the existing buffer on arrival.
+  - Tiered access — a public mesh persona, a C2 channel for operators, and direct messages keyed to per-node identities. Every transmission XEdDSA-signed.
+  - RF tooling for the operator — TXTEST orchestration, location simulation, TDoA triangulation, and a console of RF diagnostics across every radio you've deployed.
+  - WireGuard provisioning of nomadic radios — /provision and /hwid issue per-node configs from a hosted concentrator with multi-CIDR IPAM, so a roaming node keeps its tunnel across moves without re-keying.
+  - Scheduled probes and watchlists — /probes runs cron-style telemetry / trace / RF probes against named nodes, /watch alerts on configurable events; both feed back into the same operator transcript the LLM sees.
+---
+
+Hold a real conversation with the agent about what's on the wire and what's in
+the database — ask, search, follow up. Direct it to broadcast as any of its
+identities, on whichever radio. Cross-mesh bridges and an MQTT gateway tie
+multiple radios into a single console. Scheduled hooks fire announcements,
+shell commands, and LLM-generated broadcasts on a timer. Ghost identities
+rotate from n-gram models trained on real node corpora, with a bullpen
+warming replacement names ahead of rotation.

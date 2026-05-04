@@ -1,0 +1,20 @@
+---
+name: mesh-dualboot
+tagline: Pick a firmware at boot. No re-flash, no second device.
+order: 4
+languages: ["C++"]
+platforms: ["ESP32-S3"]
+repo: https://github.com/official-mesh/dualboot
+install: python3 scripts/flash_all.py --port /dev/cu.usbmodem*
+highlights:
+  - A small selector lives in the factory partition; two OTA slots hold any pair of compatible firmwares — Official Mesh, Meshtastic, MeshCore, or two versions of the same one — in parallel.
+  - On-the-go firmware selection — switch slots at every power-on, or jump back to the menu mid-session.
+  - Hardware-verified on both Heltec WiFi LoRa 32 v4 (16 MB) and LilyGo T-Beam Supreme (8 MB). Adding a board is mostly a pin map.
+---
+
+A small ESP32-S3 application that draws a boot menu on the OLED and rewrites
+`esp_ota_set_boot_partition()` based on which firmware you pick. Useful for
+A/B-ing protocols on the same hardware without burning USB-port time on
+re-flashes — and for keeping a known-good fallback one button away. The
+flasher expects pre-built firmware bins; see the project README for the build
+sequence.

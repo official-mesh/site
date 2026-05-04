@@ -1,0 +1,20 @@
+---
+import Container from "@components/Container.astro";
+import Wordmark from "@components/Wordmark.astro";
+import { SITE } from "@consts";
+---
+
+<header class="pt-8">
+  <Container>
+    <div class="flex items-center justify-between">
+      <Wordmark size="sm" />
+      <a
+        href={`https://github.com/${SITE.GH_ORG}`}
+        class="linky font-mono text-xs uppercase tracking-[0.18em] text-muted"
+        rel="noopener"
+      >
+        github&nbsp;→
+      </a>
+    </div>
+  </Container>
+</header>

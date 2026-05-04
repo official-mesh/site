@@ -1,0 +1,13 @@
+---
+type Props = { class?: string; size?: "sm" | "md" | "lg" };
+const { class: cls = "", size = "md" } = Astro.props;
+const sizes = {
+  sm: "text-sm",
+  md: "text-base",
+  lg: "text-2xl sm:text-3xl",
+} as const;
+---
+
+<a href="/" class:list={["font-mono uppercase text-fg tracking-[0.08em]", sizes[size], cls]}>
+  Official&nbsp;Mesh
+</a>

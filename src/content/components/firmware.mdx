@@ -1,0 +1,25 @@
+---
+name: Firmware
+tagline: A privacy-focused Meshtastic firmware fork.
+order: 2
+languages: ["C++"]
+platforms: ["ESP32-S3", "nRF52"]
+repo: https://github.com/official-mesh/firmware
+install: pio run -e heltec-v4 -t upload
+highlights:
+  - Identity and traffic shaping — node-ID rotation, hop obfuscation, originator and rebroadcast jitter, and cover traffic. ESP32 and nRF52.
+  - Blackout, priority TX, and radio diagnostics — go silent on demand, shape outgoing transmissions, and watch the RF floor for jamming and anomalies.
+  - A phone-free panic gesture on screen-and-button devices — seven clicks burns the current identity and engages sticky silence, with a three-second abort window.
+  - WireGuard tunnels and multi-WiFi credential rotation, on ESP32 boards — keep the node online without anchoring it to one network.
+  - Raw-frame observation and crafting, plus RF-fingerprinting countermeasures — see what's on the air, put your own bytes there, and don't be the easiest TX to single out.
+  - A threat model targeting passive RF observation, trilateration, hardware fingerprinting, and traffic-shape analysis.
+---
+
+A capability bitmap on port 350 lets clients light up only the controls a
+given node supports, so the same client binaries work against stock and
+Official Mesh nodes. Two control surfaces ship alongside the firmware: the
+[Android app](https://github.com/official-mesh/android), forked from
+Meshtastic-Android with capability-gated screens for the privacy controls,
+and the [Python CLI](https://github.com/official-mesh/python) for capability
+discovery, WireGuard control, multi-WiFi configuration, cover-traffic
+triggers, and raw-frame observation over USB, BLE, or TCP.
