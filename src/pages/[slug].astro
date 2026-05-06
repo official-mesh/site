@@ -40,11 +40,16 @@ const softwareApplicationLD = {
   name: meta.name,
   description: meta.tagline,
   applicationCategory: "UtilitiesApplication",
-  operatingSystem: meta.platforms.join(", "),
+  operatingSystem: meta.platforms,
   programmingLanguage: meta.languages,
   codeRepository: meta.repo,
   url: new URL(`/${entry.slug}`, Astro.site).toString(),
+  license: meta.license,
+  featureList: meta.highlights,
+  isAccessibleForFree: true,
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  author:    { "@id": `https://${SITE.DOMAIN}#org` },
+  publisher: { "@id": `https://${SITE.DOMAIN}#org` },
 };
 ---
 

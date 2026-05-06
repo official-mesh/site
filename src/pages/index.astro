@@ -16,7 +16,9 @@ const components = (await getCollection("components")).sort(
 const organizationLD = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": `https://${SITE.DOMAIN}#org`,
   name: SITE.NAME,
+  description: HOME.DESCRIPTION,
   url: `https://${SITE.DOMAIN}`,
   sameAs: [`https://github.com/${SITE.GH_ORG}`],
 };

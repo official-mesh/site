@@ -11,6 +11,7 @@ const components = defineCollection({
     repo: z.string().url(),
     install: z.string(),
     highlights: z.array(z.string()).min(1),
+    license: z.string().url(),
   }),
 });
 
