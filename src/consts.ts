@@ -10,5 +10,5 @@ export const SITE: Site = {
 export const HOME: Metadata = {
   TITLE: "Official Mesh",
   DESCRIPTION:
-    "Surveillance countermeasures for LoRa mesh — a Meshtastic firmware fork, an agentic operator console, identity rotation, and coordinated radio silence.",
+    "The agentic platform for surveillance countermeasures on the LoRa mesh. Identity rotation, raw-traffic analysis, and coordinated radio silence.",
 };
