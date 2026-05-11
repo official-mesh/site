@@ -1,0 +1,105 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import Container from "@components/Container.astro";
+import PageLayout from "@layouts/PageLayout.astro";
+import { SITE } from "@consts";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("components");
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+type Props = { entry: CollectionEntry<"components"> };
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const meta = entry.data;
+
+// Per-page meta description: tagline plus the first highlight, capped at the
+// ~155-char SERP-snippet cliff at a word boundary so the snippet is always
+// content-rich and unique per component (the bare tagline is short and would
+// produce duplicate-feeling search results across pages).
+function buildDescription(tagline: string, firstHighlight: string, max = 155): string {
+  const combined = `${tagline} ${firstHighlight}`.replace(/\s+/g, " ").trim();
+  if (combined.length <= max) return combined;
+  const cut = combined.lastIndexOf(" ", max);
+  return combined.slice(0, cut > 0 ? cut : max).trimEnd();
+}
+const pageDescription = meta.highlights.length > 0
+  ? buildDescription(meta.tagline, meta.highlights[0])
+  : meta.tagline;
+
+// SoftwareApplication structured data — describes this component to search
+// engines as a piece of software (which is what every card here is). Fields
+// are derived from the existing frontmatter; nothing fabricated.
+const softwareApplicationLD = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: meta.name,
+  description: meta.tagline,
+  applicationCategory: "UtilitiesApplication",
+  operatingSystem: meta.platforms,
+  programmingLanguage: meta.languages,
+  codeRepository: meta.repo,
+  url: new URL(`/${entry.slug}`, Astro.site).toString(),
+  license: meta.license,
+  featureList: meta.highlights,
+  isAccessibleForFree: true,
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  author:    { "@id": `https://${SITE.DOMAIN}#org` },
+  publisher: { "@id": `https://${SITE.DOMAIN}#org` },
+};
+---
+
+<PageLayout title={meta.name} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(softwareApplicationLD)} />
+  <Container>
+    <article class="pt-20 sm:pt-24 pb-16">
+      <a href="/#components" class="eyebrow linky inline-block mb-12">
+        ← {SITE.NAME.toLowerCase()}
+      </a>
+
+      <div class="eyebrow mb-4">
+        {meta.name} <span class="text-line">/</span> {[...meta.languages, ...meta.platforms].join(" · ")}
+      </div>
+
+      <h1 class="font-sans text-3xl sm:text-4xl font-bold tracking-tightish text-fg max-w-3xl mb-12 leading-snug">
+        {meta.tagline}
+      </h1>
+
+      <div class="grid gap-10 md:grid-cols-[1fr_18rem]">
+        <div class="space-y-8">
+          <ul class="space-y-2 text-fg/90">
+            {meta.highlights.map((h) => (
+              <li class="flex gap-3">
+                <span class="text-accent select-none mt-[0.45em] leading-none">·</span>
+                <span>{h}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div class="prose text-fg/85 leading-relaxed space-y-4">
+            <Content />
+          </div>
+        </div>
+
+        <aside class="space-y-6">
+          <div>
+            <div class="eyebrow mb-2">install</div>
+            <pre class="terminal whitespace-pre-wrap break-all">{meta.install}</pre>
+          </div>
+          <div class="space-y-2 font-mono text-xs uppercase tracking-[0.18em]">
+            <a href={meta.repo} class="linky text-fg block" rel="noopener">
+              repository&nbsp;→
+            </a>
+            <a href={`${meta.repo}#readme`} class="linky text-muted block" rel="noopener">
+              readme&nbsp;→
+            </a>
+          </div>
+        </aside>
+      </div>
+    </article>
+  </Container>
+</PageLayout>

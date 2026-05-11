@@ -1,0 +1,22 @@
+---
+// ASCII topology diagram. Column positions are deterministic so the
+// box-drawing characters line up regardless of how Commit Mono renders
+// individual glyphs. No transport labels — the lines indicate connections;
+// the body text and the component sections explain what runs over them.
+---
+
+<pre class="diagram" aria-label="Official Mesh topology: Operator drives Meshbot. Meshbot exchanges with the Firmware bidirectionally, and also exchanges with MQTT and ingests from Meshmonitor. Meshbot Remote is connected to Meshbot and can also bridge a radio for the host. Firmware CLI and Firmware UI both connect to nodes directly.">
+                          operator
+                             │
+                             ▼
+           mqtt ◄────────► meshbot ◄─────────────────────────► firmware
+                          ▲  ▲                                ▲
+    meshmonitor ──────────┘  │                                │
+                             │                                │
+                             ▼                                │
+                      meshbot remote ─────────────────────────┤
+                                                              │
+                      firmware cli ───────────────────────────┤
+                                                              │
+                      firmware ui ────────────────────────────┘
+</pre>

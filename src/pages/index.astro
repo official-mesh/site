@@ -1,0 +1,155 @@
+---
+import { getCollection } from "astro:content";
+import Container from "@components/Container.astro";
+import PageLayout from "@layouts/PageLayout.astro";
+import Section from "@components/Section.astro";
+import Topology from "@components/Topology.astro";
+import Wordmark from "@components/Wordmark.astro";
+import { HOME, SITE } from "@consts";
+
+const components = (await getCollection("components")).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+// Organization structured data — tells search engines what this project is.
+// All fields are facts; no claims about ratings, employees, founders, etc.
+const organizationLD = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": `https://${SITE.DOMAIN}#org`,
+  name: SITE.NAME,
+  description: HOME.DESCRIPTION,
+  url: `https://${SITE.DOMAIN}`,
+  sameAs: [`https://github.com/${SITE.GH_ORG}`],
+};
+---
+
+<PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
+  <script type="application/ld+json" set:html={JSON.stringify(organizationLD)} />
+  <Container>
+    <!-- Hero -->
+    <section class="pt-20 sm:pt-32 pb-24 sm:pb-32">
+      <div class="animate">
+        <Wordmark size="lg" class="mb-12" />
+      </div>
+      <h1 class="animate font-sans text-3xl sm:text-4xl md:text-5xl font-bold tracking-tightish text-fg max-w-3xl leading-[1.15]">
+        An agentic platform for surveillance countermeasures.
+      </h1>
+      <p class="animate mt-8 text-lg sm:text-xl text-muted max-w-2xl leading-relaxed">
+        Identity rotation, raw-traffic analysis, coordinated radio silence,
+        and a console that can tell you what's on the air.
+      </p>
+      <div class="animate mt-12 flex flex-wrap gap-x-8 gap-y-3 font-mono text-xs uppercase tracking-[0.18em]">
+        <a href="#components" class="linky text-fg">components&nbsp;↓</a>
+        <a href={`https://github.com/${SITE.GH_ORG}`} class="linky text-muted" rel="noopener">github&nbsp;→</a>
+      </div>
+    </section>
+
+    <!-- What this is -->
+    <section class="border-t border-line py-20 sm:py-24" id="about">
+      <div class="grid gap-10 md:grid-cols-[12rem_minmax(0,1fr)]">
+        <div class="eyebrow">about</div>
+        <div class="space-y-5 text-fg/90 leading-relaxed max-w-2xl">
+          <p>
+            LoRa mesh is cheap and off-grid. The radio layer underneath is
+            observable to anyone with a receiver — emissions, timing, hardware
+            fingerprints — regardless of the protocol on top.
+          </p>
+          <p>
+            Official Mesh is a Meshtastic firmware fork, an LLM-aware
+            operator console, and the terminal and pocket controls that
+            drive them. Wire-compatible with stock Meshtastic —
+            interoperates with everything, tells nothing it doesn't have to.
+          </p>
+          <p class="text-fg">Built for operators who want to stay quiet.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Components -->
+    <section id="components" class="pt-12">
+      <div class="eyebrow mb-2">components</div>
+      {components.map((entry, i) => (
+        <Section entry={entry} index={i + 1} />
+      ))}
+    </section>
+
+    <!-- Architecture -->
+    <section id="architecture" class="border-t border-line py-20 sm:py-28">
+      <div class="grid gap-10 md:grid-cols-[12rem_minmax(0,1fr)] mb-10">
+        <div class="eyebrow">architecture</div>
+        <p class="text-fg/90 leading-relaxed max-w-2xl">
+          The host runs Meshbot. A radio runs the Firmware. Meshbot, the
+          Firmware CLI, and the Firmware UI all drive the same control
+          surface — pick whichever one's in your hand. Stock Meshtastic
+          clients keep working alongside, no awareness required.
+        </p>
+      </div>
+      <div class="border border-line rounded-md p-6 sm:p-8 bg-surface/40">
+        <Topology />
+      </div>
+    </section>
+
+    <!-- Get started -->
+    <section id="get-started" class="border-t border-line py-20 sm:py-28">
+      <div class="grid gap-10 md:grid-cols-[12rem_minmax(0,1fr)]">
+        <div class="eyebrow">get started</div>
+        <ol class="space-y-10 max-w-2xl min-w-0">
+          <li>
+            <div class="flex items-baseline gap-4 mb-2">
+              <span class="font-mono text-accent text-sm">01</span>
+              <h3 class="font-sans text-xl text-fg">Run a node</h3>
+            </div>
+            <p class="text-muted leading-relaxed mb-3 ml-10">
+              Flash the Firmware to a supported ESP32-S3 or nRF52 board (example: a Heltec WiFi LoRa 32 v4).
+            </p>
+            <pre class="terminal ml-10 whitespace-pre-wrap break-all">pio run -e heltec-v4 -t upload</pre>
+          </li>
+          <li>
+            <div class="flex items-baseline gap-4 mb-2">
+              <span class="font-mono text-accent text-sm">02</span>
+              <h3 class="font-sans text-xl text-fg">Run an operator console</h3>
+            </div>
+            <p class="text-muted leading-relaxed mb-3 ml-10">
+              Connect Meshbot to the radio over USB, BLE, or TCP.
+            </p>
+            <pre class="terminal ml-10 whitespace-pre-wrap break-all">pip install -r requirements.txt && python meshbot.py</pre>
+          </li>
+          <li>
+            <div class="flex items-baseline gap-4 mb-2">
+              <span class="font-mono text-accent text-sm">03</span>
+              <h3 class="font-sans text-xl text-fg">Carry it in your pocket</h3>
+            </div>
+            <p class="text-muted leading-relaxed mb-3 ml-10">
+              Build Meshbot Remote on Android to drive the host from anywhere
+              the radio reaches.
+            </p>
+            <pre class="terminal ml-10 whitespace-pre-wrap break-all">./gradlew assembleDebug && adb install -r app/build/outputs/apk/debug/app-debug.apk</pre>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Source code links -->
+    <section id="source" class="border-t border-line py-20 sm:py-28">
+      <div class="grid gap-10 md:grid-cols-[12rem_minmax(0,1fr)]">
+        <div class="eyebrow">source code</div>
+        <ul class="space-y-3 text-fg/90 max-w-2xl">
+          {[
+            { name: "Meshbot", repo: "meshbot" },
+            { name: "Firmware", repo: "firmware" },
+            { name: "Firmware UI", repo: "android" },
+            { name: "Firmware CLI", repo: "python" },
+            { name: "Meshbot Remote", repo: "remote" },
+            { name: "mesh-dualboot", repo: "dualboot" },
+          ].map(({ name, repo }) => (
+            <li class="flex items-baseline gap-3">
+              <span class="text-accent select-none">·</span>
+              <a class="linky font-mono text-fg" href={`https://github.com/${SITE.GH_ORG}/${repo}`} rel="noopener">{name}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  </Container>
+</PageLayout>

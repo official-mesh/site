@@ -1,0 +1,29 @@
+---
+name: mesh-dualboot
+tagline: Pick a firmware at boot. No re-flash, no second device.
+order: 4
+languages: ["C++"]
+platforms: ["ESP32-S3"]
+repo: https://github.com/official-mesh/dualboot
+license: https://www.gnu.org/licenses/agpl-3.0-standalone.html
+install: python3 scripts/flash_all.py --port /dev/cu.usbmodem*
+highlights:
+  - A small selector lives in the factory partition; two OTA slots hold any pair of compatible firmwares — Official Mesh, Meshtastic, MeshCore, or two versions of the same one — in parallel.
+  - On-the-go firmware selection — switch slots at every power-on, or jump back to the menu mid-session.
+  - Net-OTA — refresh a slot from your phone or across a LAN over WiFi+TCP. The selector verifies an HMAC-SHA256 or Ed25519 signature on the bin before it touches the partition; otadata is untouched, so boot ownership never moves.
+  - Local-transport-only trigger — a command from the Python CLI or the Android app reboots the device into its listen window over USB, BLE, or the TCP phone-API. The signed bin then lands over WiFi. Trigger packets arriving over the LoRa mesh or MQTT are refused.
+  - Hardware-verified on both Heltec WiFi LoRa 32 v4 (16 MB) and LilyGo T-Beam Supreme (8 MB). Adding a board is mostly a pin map.
+---
+
+A small ESP32-S3 application that draws a boot menu on the OLED and rewrites
+`esp_ota_set_boot_partition()` based on which firmware you pick. Useful for
+A/B-ing protocols on the same hardware without burning USB-port time on
+re-flashes — and for keeping a known-good fallback one button away. The
+flasher expects pre-built firmware bins; see the project README for the build
+sequence.
+
+Net-OTA is opt-in at build time and adds a WiFi+TCP listener to the selector.
+The signing helper (`mdb_sign.py`) wraps a bin in the wire format; the pusher
+(`mdb_push.py`) streams it to the device. Sessions are capped at five
+minutes, WiFi credentials live only on the stack during the window, and a
+bad signature wipes the partition before exit.

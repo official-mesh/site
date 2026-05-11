@@ -1,0 +1,27 @@
+---
+name: Firmware
+tagline: A privacy-focused Meshtastic firmware fork.
+order: 2
+languages: ["C++"]
+platforms: ["ESP32-S3", "nRF52"]
+repo: https://github.com/official-mesh/firmware
+license: https://www.gnu.org/licenses/gpl-3.0-standalone.html
+install: pio run -e heltec-v4 -t upload
+highlights:
+  - Identity and traffic shaping — node-ID rotation, hop obfuscation, originator and rebroadcast jitter, and cover traffic. ESP32 and nRF52.
+  - Blackout, priority TX, and radio diagnostics — go silent on demand, shape outgoing transmissions, and watch the RF floor for jamming and anomalies.
+  - A phone-free panic gesture on screen-and-button devices — seven clicks burns the current identity and engages sticky silence, with a three-second abort window.
+  - Raw-frame observation with full RF metadata per reception — carrier-frequency offset, spreading factor, bandwidth, frequency, preamble length, noise floor, AGC gain, symbol-timing offset. A multi-SF, multi-channel passive sweep covers up to sixteen frequency/SF/BW slots continuously from one radio.
+  - Dualboot net-OTA trigger on compatible builds — a Python CLI or Android-app command over the device's existing USB, BLE, or phone-API link reboots it into the selector's signed-firmware listen window. The bin then lands over WiFi. Trigger packets over the LoRa mesh or MQTT are refused.
+  - RF-fingerprinting countermeasures, an opt-in open-AP fallback that keeps the on-device API reachable only inside the WireGuard tunnel, and multi-WiFi credential rotation on ESP32 — keep the node online without anchoring it to one network or making it the easiest TX to single out.
+  - A threat model targeting passive RF observation, trilateration, hardware fingerprinting, and traffic-shape analysis.
+---
+
+A capability handshake lets clients light up only the controls a given node
+supports, so the same client binaries work across the fleet regardless of
+which features were compiled in. Two control surfaces ship alongside the
+firmware: the [Android app](https://github.com/official-mesh/android), with
+capability-gated screens for the privacy controls, and the
+[Python CLI](https://github.com/official-mesh/python) for capability
+discovery, WireGuard control, multi-WiFi configuration, cover-traffic
+triggers, and raw-frame observation over USB, BLE, or TCP.

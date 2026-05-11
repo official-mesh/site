@@ -1,0 +1,56 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type Props = {
+  entry: CollectionEntry<"components">;
+  index: number;
+};
+
+const { entry, index } = Astro.props;
+const { Content } = await entry.render();
+const num = String(index).padStart(2, "0");
+const slug = entry.slug;
+---
+
+<section id={slug} class="border-t border-line py-20 sm:py-28 first:border-t-0 first:pt-0">
+  <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 mb-6">
+    <span class="eyebrow">{num} <span class="text-line">/</span> {entry.data.name}</span>
+    <span class="eyebrow sm:text-right">
+      {[...entry.data.languages, ...entry.data.platforms].join(" · ")}
+    </span>
+  </div>
+
+  <h2 class="font-sans text-2xl sm:text-3xl font-bold tracking-tightish text-fg max-w-3xl mb-12 leading-snug">
+    {entry.data.tagline}
+  </h2>
+
+  <div class="grid gap-10 md:grid-cols-2 md:gap-14 min-w-0">
+    <div class="space-y-6">
+      <ul class="space-y-2 text-fg/90">
+        {entry.data.highlights.map((h) => (
+          <li class="flex gap-3">
+            <span class="text-accent select-none mt-[0.45em] leading-none">·</span>
+            <span>{h}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div class="prose text-muted leading-relaxed">
+        <Content />
+      </div>
+
+      <div class="flex flex-wrap gap-x-6 gap-y-2 pt-2 font-mono text-xs uppercase tracking-[0.18em]">
+        <a href={entry.data.repo} class="linky text-fg" rel="noopener">
+          repository&nbsp;→
+        </a>
+        <a href={`/${slug}`} class="linky text-muted">
+          read more&nbsp;→
+        </a>
+      </div>
+    </div>
+
+    <div class="md:pt-1">
+      <pre class="terminal whitespace-pre-wrap break-all">{entry.data.install}</pre>
+    </div>
+  </div>
+</section>
